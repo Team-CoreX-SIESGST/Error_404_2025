@@ -5,6 +5,7 @@ import AboutSection from "@/components/sections/AboutSection"
 import FeaturesSection from "@/components/sections/FeaturesSection"
 import DemoSection from "@/components/sections/DemoSection"
 import TrackingSection from "@/components/sections/TrackingSection"
+import ArenaChatSection from "@/components/sections/ArenaChatSection"
 import CTASection from "@/components/sections/CTASection"
 import Footer from "@/components/sections/Footer"
 import Navbar from "@/components/Navbar"
@@ -20,6 +21,7 @@ export default function Home() {
           <FeaturesSection />
           <DemoSection />
           <TrackingSection />
+          
           <CTASection />
         </main>
         <Footer />
