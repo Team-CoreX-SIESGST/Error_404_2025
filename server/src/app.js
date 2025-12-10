@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { userRoute } from "./controllers/user/userRoutes.js";
+import { userRoute } from "./router/userRoutes.js";
 import { verifyJWT } from "./middlewares/auth.middleware.js";
 const app = express();
 
