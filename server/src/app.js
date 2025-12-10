@@ -21,15 +21,19 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+import chatRouter from './router/chatRoutes.js'
+
 app.use("/api/users", userRoute);
 // Public subscription routes
 
 // app.use("/api/role",roleRouter)
 app.use(verifyJWT);
+app.use("/api/chat",chatRouter)
 // app.use("/api/subscription", subscriptionRouter);
 // app.use("/api/sections", chatRouter);
 // app.use("/api/ai", promptRouter);
 // app.use("/api/patients", patientRoute);
+
 
 
 // backend route for OAuth callback
