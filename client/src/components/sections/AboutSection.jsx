@@ -1,4 +1,5 @@
 import GlassCard from "@/components/GlassCard";
+import BrimEffect from "@/components/BrimEffect";
 import { Brain, Search, Lightbulb, MessageSquare, Scale, ArrowRight } from "lucide-react";
 
 const agents = [
@@ -37,9 +38,10 @@ const agents = [
 const AboutSection = () => {
   return (
     <section id="about" className="relative py-24 md:py-32 overflow-hidden">
+      <BrimEffect className="z-0" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />
       
-      <div className="relative container mx-auto px-6">
+      <div className="relative z-10 container mx-auto px-6">
         <div className="text-center mb-16 space-y-4">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-glow opacity-0 animate-fade-in">
             Multi-Agent Intelligence, <span className="gradient-text">Redefined</span>

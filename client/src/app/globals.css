@@ -152,4 +152,50 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* Simple animation utilities for sections/buttons/backgrounds */
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes text-glow-pulse {
+    0%, 100% { text-shadow: 0 0 6px hsl(var(--primary) / 0.4), 0 0 14px hsl(var(--primary) / 0.25); }
+    50% { text-shadow: 0 0 14px hsl(var(--primary) / 0.8), 0 0 28px hsl(var(--primary) / 0.5); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 12px hsl(var(--primary) / 0.35), 0 0 24px hsl(var(--primary) / 0.2); }
+    50% { box-shadow: 0 0 20px hsl(var(--primary) / 0.6), 0 0 36px hsl(var(--primary) / 0.35); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.8s ease forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease forwards;
+  }
+
+  .animate-text-glow-pulse {
+    animation: text-glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 12s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 1.5s ease-in-out infinite;
+  }
 }
