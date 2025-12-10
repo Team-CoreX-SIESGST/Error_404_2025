@@ -42,10 +42,10 @@ const Navbar = () => {
             </span>
           </a>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               
-                <Link key={link.label} href={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium relative group">
+                <Link key={link.label} href={link.href} className="text-xl text-muted-foreground hover:text-primary transition-colors text-sm font-medium relative group">
                 {link.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
               </Link>
@@ -53,10 +53,14 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:block">
-            <GlowButton size="sm" href="#cta">
-              Join Waitlist
-            </GlowButton>
-          </div>
+  <a
+    href="#cta"
+    className="relative px-6 py-3 text-sm font-semibold uppercase tracking-wide rounded-lg bg-primary text-primary-foreground border border-primary/50 transition-all duration-300 hover:shadow-[0_0_12px_var(--tw-shadow-color)] hover:shadow-primary/60"
+  >
+    Join Waitlist
+  </a>
+</div>
+
 
           <button
             className="md:hidden text-foreground p-2"

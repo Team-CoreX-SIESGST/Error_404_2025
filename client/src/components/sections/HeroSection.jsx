@@ -40,12 +40,12 @@ const HeroSection = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-fade-in [animation-delay:1000ms]">
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 animate-fade-in [animation-delay:1000ms]">
           <button 
             onClick={scrollToFeatures}
-            className="text-muted-foreground hover:text-primary transition-colors animate-float"
+            className="text-muted-foreground hover:text-primary transition-colors animate-float pt-10"
           >
-            <ChevronDown className="w-8 h-8" />
+            <ChevronDown className="w-8 h-8" /> 
           </button>
         </div>
       </div>
