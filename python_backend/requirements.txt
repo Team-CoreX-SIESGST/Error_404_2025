@@ -4,3 +4,4 @@ langchain-openai
 python-dotenv  
 fastapi
 uvicorn
+langchain-google-genai
