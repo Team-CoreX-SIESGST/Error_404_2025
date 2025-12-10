@@ -1,42 +1,46 @@
 import { sendResponse } from "../utils/apiResonse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
-import { statusType } from "../utils/statusType.js"; // Make sure this is correctly imported
+import { statusType } from "../utils/statusType.js";
 import User from "../models/user.js";
 
+/**
+ * Middleware to verify JWT token
+ * Looks for token in cookies first, then in Authorization header
+ */
 export const verifyJWT = asyncHandler(async (req, res, next) => {
-    const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    // console.log("Token being verified:", token);
-    // console.log("Secret being used:", process.env.ACCESS_TOKEN_SECRET);
+    // Get token from cookies or Authorization header
+    const token = req.cookies?.token || 
+                 req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
         return sendResponse(
             res,
             false,
             null,
-            "Unauthorized request: Token missing",
+            "Authentication required",
             statusType.UNAUTHORIZED
         );
     }
 
     try {
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        // const user = await User.findById(decodedToken?._id).select(
-        //   "-password -refreshToken"
-        // );
-        const user = await User.findById(decodedToken?.user_id).select("-password");
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // Get user from the token
+        const user = await User.findById(decoded.user_id).select("-password");
 
         if (!user) {
             return sendResponse(
                 res,
                 false,
                 null,
-                "Unauthorized request: Invalid access token",
+                "User not found",
                 statusType.UNAUTHORIZED
             );
         }
 
+        // Attach user to request object
         req.user = user;
         next();
     } catch (error) {
@@ -44,7 +48,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
             res,
             false,
             null,
-            error?.message || "Unauthorized request: Token verification failed",
+            "Invalid or expired token",
             statusType.UNAUTHORIZED
         );
     }
