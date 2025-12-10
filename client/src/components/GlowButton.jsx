@@ -83,22 +83,22 @@ const GlowButton = ({
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className={combinedClasses}
+          className={`relative ${combinedClasses}`}
         >
           <span className="relative z-10 flex items-center justify-center gap-2">
             {children}
           </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 -z-0 bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </a>
       );
     } else {
       // Internal link - use Next.js Link
       return (
-        <Link href={href} className={combinedClasses}>
+        <Link href={href} className={`relative ${combinedClasses}`}>
           <span className="relative z-10 flex items-center justify-center gap-2">
             {children}
           </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 -z-0 bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </Link>
       );
     }
@@ -107,14 +107,14 @@ const GlowButton = ({
   // Regular button
   return (
     <button
+      type={onClick ? "button" : "submit"}
       onClick={onClick}
-      type="button"
-      className={combinedClasses}
+      className={`relative ${combinedClasses}`}
     >
       <span className="relative z-10 flex items-center justify-center gap-2">
         {children}
       </span>
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 -z-0 bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </button>
   );
 };

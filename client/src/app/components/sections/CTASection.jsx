@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import GlowButton from "@/components/GlowButton";
 import GlassCard from "@/components/GlassCard";
 import { Rocket, Mail, Check } from "lucide-react";
@@ -12,10 +13,10 @@ const CTASection = () => {
     e.preventDefault();
     if (email) {
       setSubmitted(true);
-      toast({
-        title: "Welcome to the Arena!",
-        description: "You've been added to our waitlist. Stay tuned for updates.",
-      });
+      // toast({
+      //   title: "Welcome to the Arena!",
+      //   description: "You've been added to our waitlist. Stay tuned for updates.",
+      // });
     }
   };
 
@@ -31,37 +32,29 @@ const CTASection = () => {
             </div>
             
             <h2 className="font-display text-3xl md:text-4xl font-bold">
-              <span className="gradient-text">Join the AI Collective</span>
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Join the AI Collective
+              </span>
             </h2>
             
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Be among the first to experience the future of multi-agent AI reasoning. 
-              Enter your email to join our exclusive waitlist.
+              Be among the first to experience the future of multi-agent AI reasoning.
             </p>
 
-            {!submitted ? (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto pt-4">
-                <div className="relative flex-1">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full pl-12 pr-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  />
-                </div>
-                <GlowButton size="md">
-                  Join Waitlist
+            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto pt-4">
+              <Link href="/auth/register" className="w-full">
+                <GlowButton size="lg" className="w-full">
+                  Sign up now
                 </GlowButton>
-              </form>
-            ) : (
-              <div className="flex items-center justify-center gap-3 text-primary pt-4">
-                <Check className="w-6 h-6" />
-                <span className="font-display text-lg">You're on the list!</span>
-              </div>
-            )}
+              </Link>
+            </div>
+            
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link href="/auth/login" className="text-primary hover:underline">
+                Sign in
+              </Link>
+            </p>
           </div>
         </GlassCard>
       </div>

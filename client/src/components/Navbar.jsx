@@ -53,14 +53,13 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:block">
-  <a
-    href="#cta"
-    className="relative px-6 py-3 text-sm font-semibold uppercase tracking-wide rounded-lg bg-primary text-primary-foreground border border-primary/50 transition-all duration-300 hover:shadow-[0_0_12px_var(--tw-shadow-color)] hover:shadow-primary/60"
-  >
-    Join Waitlist
-  </a>
-</div>
-
+            <Link
+              href="/auth/register"
+              className="relative px-6 py-3 text-sm font-semibold uppercase tracking-wide rounded-lg bg-primary text-primary-foreground border border-primary/50 transition-all duration-300 hover:shadow-[0_0_12px_var(--tw-shadow-color)] hover:shadow-primary/60 inline-block"
+            >
+              Sign up now
+            </Link>
+          </div>
 
           <button
             className="md:hidden text-foreground p-2"
@@ -80,7 +79,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <GlowButton size="sm" href="#cta">
-                Join Waitlist
+                Sign up now
               </GlowButton>
             </div>
           </div>

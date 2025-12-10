@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import GlowButton from "@/components/GlowButton";
 import GlassCard from "@/components/GlassCard";
 import { Rocket, Mail, Check } from "lucide-react";
@@ -40,7 +41,7 @@ const CTASection = () => {
             </p>
 
             {!submitted ? (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto pt-4">
                 <div className="relative flex-1">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
@@ -48,14 +49,15 @@ const CTASection = () => {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
                     className="w-full pl-12 pr-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   />
                 </div>
-                <GlowButton size="md">
-                  Join Waitlist
-                </GlowButton>
-              </form>
+                <Link href="/auth/register" className="w-full sm:w-auto">
+                  <GlowButton size="md" className="w-full">
+                    Sign up now
+                  </GlowButton>
+                </Link>
+              </div>
             ) : (
               <div className="flex items-center justify-center gap-3 text-primary pt-4">
                 <Check className="w-6 h-6" />
