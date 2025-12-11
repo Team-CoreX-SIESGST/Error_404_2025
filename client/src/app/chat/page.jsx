@@ -637,7 +637,7 @@ const ChatPage = () => {
               </div>
               <div>
                 <h1 className="font-display text-xl font-bold text-foreground bg-gradient-to-r from-blue-500 via-red-500 to-emerald-500 bg-clip-text text-transparent animate-text-glow">
-                  AI Battle Arena
+                  AI Collective Arena
                 </h1>
                 <p className="text-xs text-muted-foreground">
                   Compare top AI models with automatic scoring
@@ -890,9 +890,9 @@ const ChatPage = () => {
                             </div>
                           </div>
                         </div>
-                        <button className="px-3 py-1.5 rounded-lg bg-card/50 border border-border text-sm hover:bg-card/70">
+                        {/* <button className="px-3 py-1.5 rounded-lg bg-card/50 border border-border text-sm hover:bg-card/70">
                           View Detailed Comparison
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   )}
@@ -1150,7 +1150,7 @@ const ChatPage = () => {
                     <Trophy className="w-12 h-12 text-primary" />
                   </div>
                   <h3 className="text-2xl font-display font-medium text-foreground mb-3 bg-gradient-to-r from-blue-500 via-red-500 to-emerald-500 bg-clip-text text-transparent animate-text-glow">
-                    AI Battle Arena
+                    AI Collective Arena
                   </h3>
                   <p className="text-muted-foreground max-w-md mb-8 text-lg">
                     Witness the ultimate AI showdown. Top models compete to
