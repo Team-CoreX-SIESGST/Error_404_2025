@@ -77,7 +77,7 @@ export default function RegisterPage() {
       localStorage.setItem('user', JSON.stringify(loginData.user));
       
       // Redirect to dashboard or home
-      router.push('/dashboard');
+      router.push('/chat');
     } catch (err) {
       setError(err.message || 'An error occurred during registration');
     } finally {
