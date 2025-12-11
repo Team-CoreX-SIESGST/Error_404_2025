@@ -267,13 +267,6 @@ Quantum computers use quantum bits (qubits) that can exist in multiple states si
 **Current Limitations:**
 
 Quantum computers require extreme cooling (near absolute zero), are highly susceptible to environmental interference (decoherence), and currently excel only at specific problem types rather than general computing.`,
-    score: 9.2,
-    metrics: {
-      accuracy: 95,
-      depth: 92,
-      clarity: 96,
-      relevance: 94,
-    },
   },
   grok: {
     content: `**Quantum Computing: The Next Frontier**
@@ -308,13 +301,6 @@ Based on comprehensive analysis of recent developments, quantum computing is tra
 - Portfolio optimization in finance
 - Supply chain logistics
 - Material science discoveries`,
-    score: 8.8,
-    metrics: {
-      accuracy: 94,
-      depth: 91,
-      clarity: 88,
-      relevance: 95,
-    },
   },
   deepseek: {
     content: `**Quantum Computing: Mathematical Foundation & Current State**
@@ -349,14 +335,51 @@ Quantum computing operates on principles of linear algebra and probability:
 
 **Economic Analysis:**
 Quantum computing will likely complement classical systems rather than replace them. Hybrid quantum-classical algorithms (like VQE and QAOA) show immediate practical value for optimization problems.`,
-    score: 9.0,
-    metrics: {
-      accuracy: 96,
-      depth: 94,
-      clarity: 89,
-      relevance: 92,
-    },
   },
+};
+
+// Function to generate random score between 8.0 and 9.75
+const generateRandomScore = () => {
+  const min = 8.0;
+  const max = 9.75;
+  return parseFloat((Math.random() * (max - min) + min).toFixed(2));
+};
+
+// Function to generate random metrics based on score
+const generateRandomMetrics = (score) => {
+  const baseValue = Math.round(score * 10);
+  const variation = 2; // ±2 variation
+
+  return {
+    accuracy: Math.min(
+      100,
+      Math.max(
+        85,
+        baseValue + Math.floor(Math.random() * variation * 2 - variation)
+      )
+    ),
+    depth: Math.min(
+      100,
+      Math.max(
+        85,
+        baseValue + Math.floor(Math.random() * variation * 2 - variation)
+      )
+    ),
+    clarity: Math.min(
+      100,
+      Math.max(
+        85,
+        baseValue + Math.floor(Math.random() * variation * 2 - variation)
+      )
+    ),
+    relevance: Math.min(
+      100,
+      Math.max(
+        85,
+        baseValue + Math.floor(Math.random() * variation * 2 - variation)
+      )
+    ),
+  };
 };
 
 const ChatPage = () => {
@@ -447,10 +470,14 @@ const ChatPage = () => {
     setAiStatus((prev) => ({ ...prev, [modelId]: "generating" }));
     await streamText(responseContent[modelId].content, modelId, chatId);
 
+    // Generate random score and metrics for this response
+    const score = generateRandomScore();
+    const metrics = generateRandomMetrics(score);
+
     return {
       content: responseContent[modelId].content,
-      score: responseContent[modelId].score,
-      metrics: responseContent[modelId].metrics,
+      score: score,
+      metrics: metrics,
       status: "completed",
       completedAt: new Date().toISOString(),
       thinkingSteps: allThinkingSteps,
