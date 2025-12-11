@@ -48,7 +48,7 @@ export default function LoginPage() {
       localStorage.setItem('user', JSON.stringify(data.user));
       
       // Redirect to dashboard or home
-      router.push('/dashboard');
+      router.push('/chat');
     } catch (err) {
       setError(err.message || 'An error occurred during login');
     } finally {
