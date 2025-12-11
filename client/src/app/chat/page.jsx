@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import {
   Send,
@@ -659,16 +659,26 @@ const ChatPage = () => {
         <header className="backdrop-blur-xl bg-card/50 border-b border-border py-4 px-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/30 flex items-center justify-center backdrop-blur-sm">
-                <Trophy className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h1 className="font-display text-xl font-bold text-foreground bg-gradient-to-r from-blue-500 via-red-500 to-emerald-500 bg-clip-text text-transparent animate-text-glow">
-                  AI Collective Arena
-                </h1>
-                <p className="text-xs text-muted-foreground">
+            <a href="#" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
+              <span className="font-display text-sm font-bold text-primary">AI</span>
+            </div>
+            <div className="flex flex-col">
+              <Link href="/">
+              <span className="font-display text-lg font-semibold text-foreground hidden sm:block">
+              AI Collective Arena
+            </span>
+              </Link>
+            
+            <p className="text-xs text-muted-foreground">
                   Compare top AI models with automatic scoring
                 </p>
+            </div>
+            
+          </a>
+              <div>
+                
+                
               </div>
             </div>
           </div>
@@ -1173,10 +1183,13 @@ const ChatPage = () => {
                 </div>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500/20 to-emerald-500/20 border border-primary/30 flex items-center justify-center mb-6 backdrop-blur-sm shadow-xl">
-                    <Trophy className="w-12 h-12 text-primary" />
+                  <div className="mb-6">
+                    {/* <Trophy className="w-12 h-12 text-primary" /> */}
+                    <div className="w-[100px] h-[100px] rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
+              <span className="font-display text-4xl font-bold text-primary">AI</span>
+            </div>
                   </div>
-                  <h3 className="text-2xl font-display font-medium text-foreground mb-3 bg-gradient-to-r from-blue-500 via-red-500 to-emerald-500 bg-clip-text text-transparent animate-text-glow">
+                  <h3 className="text-2xl font-display font-medium text-foreground mb-3 text-white animate-text-glow">
                     AI Collective Arena
                   </h3>
                   <p className="text-muted-foreground max-w-md mb-8 text-lg">
