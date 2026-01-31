@@ -23,21 +23,21 @@ const CTASection = () => {
   return (
     <section id="cta" className="relative py-24 md:py-32 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent" />
-      
+
       <div className="relative container mx-auto px-6">
         <GlassCard className="max-w-3xl mx-auto text-center p-8 md:p-12" glow>
           <div className="space-y-6">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 mb-4 animate-glow-pulse">
               <Rocket className="w-8 h-8 text-primary" />
             </div>
-            
+
             <h2 className="font-display text-3xl md:text-4xl font-bold">
               <span className="gradient-text">Join the AI Collective</span>
             </h2>
-            
+
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Be among the first to experience the future of multi-agent AI reasoning. 
-              Enter your email to join our exclusive waitlist.
+              Be among the first to experience the future of multi-agent AI
+              reasoning. Enter your email to join our exclusive waitlist.
             </p>
 
             {!submitted ? (
@@ -61,7 +61,9 @@ const CTASection = () => {
             ) : (
               <div className="flex items-center justify-center gap-3 text-primary pt-4">
                 <Check className="w-6 h-6" />
-                <span className="font-display text-lg">You're on the list!</span>
+                <span className="font-display text-lg">
+                  You&apos;re on the list!
+                </span>
               </div>
             )}
           </div>

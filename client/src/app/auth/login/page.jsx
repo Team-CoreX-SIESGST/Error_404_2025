@@ -77,7 +77,10 @@ export default function LoginPage() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-foreground mb-1"
+              >
                 Email address
               </label>
               <input
@@ -95,10 +98,16 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-foreground mb-1"
+                >
                   Password
                 </label>
-                <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-primary hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
@@ -118,13 +127,13 @@ export default function LoginPage() {
 
           <div>
             <GlowButton type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? "Signing in..." : "Sign in"}
             </GlowButton>
           </div>
         </form>
 
         <div className="text-center text-sm text-muted-foreground">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{" "}
           <Link href="/auth/register" className="text-primary hover:underline">
             Sign up
           </Link>

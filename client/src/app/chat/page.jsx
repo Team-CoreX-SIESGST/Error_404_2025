@@ -130,15 +130,6 @@ const thinkingSteps = {
       selected: true,
       reason: "Final formatting",
     },
-    { 
-      id: 2, 
-      name: 'Grok 2', 
-      role: 'Researcher',
-      icon: 'https://images.seeklogo.com/logo-png/60/2/groq-icon-logo-png_seeklogo-605779.png',
-      color: 'from-cyan-400 to-blue-500',
-      status: 'Researching...',
-      progress: 60
-    },
     {
       step: "Alternative approach: Using historical data...",
       selected: false,
@@ -342,34 +333,34 @@ const generateRandomMetrics = (score) => {
       100,
       Math.max(
         85,
-        baseValue + Math.floor(Math.random() * variation * 2 - variation)
-      )
+        baseValue + Math.floor(Math.random() * variation * 2 - variation),
+      ),
     ),
     depth: Math.min(
       100,
       Math.max(
         85,
-        baseValue + Math.floor(Math.random() * variation * 2 - variation)
-      )
+        baseValue + Math.floor(Math.random() * variation * 2 - variation),
+      ),
     ),
     clarity: Math.min(
       100,
       Math.max(
         85,
-        baseValue + Math.floor(Math.random() * variation * 2 - variation)
-      )
+        baseValue + Math.floor(Math.random() * variation * 2 - variation),
+      ),
     ),
     relevance: Math.min(
       100,
       Math.max(
         85,
-        baseValue + Math.floor(Math.random() * variation * 2 - variation)
-      )
+        baseValue + Math.floor(Math.random() * variation * 2 - variation),
+      ),
     ),
   };
 };
 
-const ChatPage = () => {
+export default function ChatPage() {
   const [activeChat, setActiveChat] = useState(null);
   const [input, setInput] = useState("");
   const [aiStatus, setAiStatus] = useState({});
@@ -416,13 +407,13 @@ const ChatPage = () => {
 
       // Different streaming speeds for different models
       await new Promise((resolve) =>
-        setTimeout(resolve, baseDelay + Math.random() * randomDelay)
+        setTimeout(resolve, baseDelay + Math.random() * randomDelay),
       );
     }
   };
 
   const simulateThinking = async (modelId, chatId) => {
-    const steps = thinkingSteps[modelId];
+    const steps = thinkingSteps[modelId] || thinkingSteps.gemini; // Fallback to gemini steps
     setAiStatus((prev) => ({ ...prev, [modelId]: "thinking" }));
 
     // Store all thinking steps for this model
@@ -435,7 +426,7 @@ const ChatPage = () => {
       // Different thinking speeds for different models
       const thinkDelay = modelId === "gemini" ? 400 : 1200; // Gemini thinks faster
       await new Promise((resolve) =>
-        setTimeout(resolve, thinkDelay + Math.random() * 300)
+        setTimeout(resolve, thinkDelay + Math.random() * 300),
       );
 
       setThinkingProcess((prev) => [
@@ -497,7 +488,7 @@ const ChatPage = () => {
 
     // Run all AI models in parallel
     const promises = aiModels.map((model) =>
-      simulateThinking(model.id, newChatId)
+      simulateThinking(model.id, newChatId),
     );
     const results = await Promise.all(promises);
 
@@ -521,8 +512,8 @@ const ChatPage = () => {
               ...chat,
               responses: updatedResponses,
             }
-          : chat
-      )
+          : chat,
+      ),
     );
 
     // Set all to completed
@@ -539,6 +530,13 @@ const ChatPage = () => {
     if (!input.trim() || isProcessing) return;
     createNewChat(input);
     setInput("");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   const handleNewChat = () => {
@@ -588,26 +586,22 @@ const ChatPage = () => {
     }
   };
 
+  const renderScoreBadge = (modelId, score) => {
+    const model = aiModels.find((m) => m.id === modelId);
     return (
-      <div className="border rounded-lg overflow-hidden mt-4">
-        <div className="flex border-b">
-          {Object.keys(responses).map((model) => (
-            <button
-              key={model}
-              className={`px-4 py-2 font-medium ${
-                activeTab === model
-                  ? 'border-b-2 border-blue-500 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setActiveTab(model)}
-            >
-              {model.charAt(0).toUpperCase() + model.slice(1)}
-            </button>
-          ))}
-        </div>
-        {renderResponse(activeTab)}
+      <div
+        className={`px-2 py-1 rounded-full text-xs font-medium ${model.bgColor} border ${model.borderColor} text-foreground`}
+      >
+        {score.toFixed(2)}
       </div>
     );
+  };
+
+  const toggleThinkingProcess = (modelId) => {
+    setShowThinkingProcess((prev) => ({
+      ...prev,
+      [modelId]: !prev[modelId],
+    }));
   };
 
   return (
@@ -618,51 +612,59 @@ const ChatPage = () => {
         <header className="backdrop-blur-xl bg-card/50 border-b border-border py-4 px-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-            <a href="#" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
-              <span className="font-display text-sm font-bold text-primary">AI</span>
-            </div>
-            <div className="flex flex-col">
-              <Link href="/">
-              <span className="font-display text-lg font-semibold text-foreground hidden sm:block">
-              AI Collective Arena
-            </span>
-              </Link>
-            
-            <p className="text-xs text-muted-foreground">
-                  Compare top AI models with automatic scoring
-                </p>
-            </div>
-            
-          </a>
-              <div>
-                
-                
-              </div>
+              <a href="#" className="flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
+                  <span className="font-display text-sm font-bold text-primary">
+                    AI
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <Link href="/">
+                    <span className="font-display text-lg font-semibold text-foreground hidden sm:block">
+                      AI Collective Arena
+                    </span>
+                  </Link>
+                  <p className="text-xs text-muted-foreground">
+                    Compare top AI models with automatic scoring
+                  </p>
+                </div>
+              </a>
             </div>
           </div>
+        </header>
+
+        {/* Chat History */}
+        <div className="flex-1 overflow-y-auto p-4">
           <div className="space-y-2">
-            {sessions.map(session => (
-              <div 
-                key={session.id}
+            {chatHistory.map((chat) => (
+              <div
+                key={chat.id}
                 className={`p-3 rounded-lg cursor-pointer flex justify-between items-center transition-all duration-200 ${
-                  activeSession === session.title 
-                    ? 'bg-gradient-to-r from-primary/10 to-accent/5 border border-primary/20 shadow-glow' 
-                    : 'hover:bg-accent/5 border border-transparent hover:border-accent/10'
+                  activeChat === chat.id
+                    ? "bg-gradient-to-r from-primary/10 to-accent/5 border border-primary/20 shadow-glow"
+                    : "hover:bg-accent/5 border border-transparent hover:border-accent/10"
                 }`}
-                onClick={() => setActiveSession(session.title)}
+                onClick={() => setActiveChat(chat.id)}
               >
                 <div>
-                  <p className="font-medium text-foreground">{session.title}</p>
-                  <p className="text-xs text-muted-foreground">{session.agents} agents collaborated</p>
+                  <p className="font-medium text-foreground">
+                    {chat.query.length > 30
+                      ? `${chat.query.substring(0, 30)}...`
+                      : chat.query}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {Object.keys(chat.responses).length} agents responded
+                  </p>
                 </div>
-                <span className="text-xs text-muted-foreground">{session.time}</span>
+                <span className="text-xs text-muted-foreground">
+                  {chat.timestamp}
+                </span>
               </div>
             ))}
           </div>
-        </div>
 
-            {/* AI Models Overview */}
+          {/* AI Models Overview */}
+          <div className="mt-6">
             <div className="p-4 border-b border-border">
               <button
                 onClick={() => setShowModels(!showModels)}
@@ -723,388 +725,415 @@ const ChatPage = () => {
               )}
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Main Chat Area */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Thinking Process Bar */}
-            {thinkingProcess.length > 0 && (
-              <div className="border-b border-border bg-card/20 py-3 px-4 backdrop-blur-sm">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                  <Zap className="w-4 h-4 animate-pulse" />
-                  AI Models are thinking...
-                </div>
-                <div className="flex items-center gap-3 overflow-x-auto">
-                  {thinkingProcess.slice(-3).map((process) => {
-                    const model = aiModels.find(
-                      (a) => a.id === process.modelId
-                    );
-                    return (
-                      <div
-                        key={process.id}
-                        className={`flex items-center gap-2 whitespace-nowrap px-3 py-1.5 rounded-lg border ${
-                          process.selected
-                            ? "bg-card/50 border-border"
-                            : "bg-red-500/10 border-red-500/20"
-                        } animate-fade-in`}
-                      >
-                        <div
-                          className={`w-6 h-6 rounded-full ${model?.avatarBg} flex items-center justify-center shadow-md`}
-                        >
-                          <model.icon className="w-3 h-3 text-white" />
-                        </div>
-                        <div className="text-sm text-foreground">
-                          {process.step}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {process.timestamp}
-                        </div>
-                      </div>
-                    );
-                  })}
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Thinking Process Bar */}
+        {thinkingProcess.length > 0 && (
+          <div className="border-b border-border bg-card/20 py-3 px-4 backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+              <Zap className="w-4 h-4 animate-pulse" />
+              AI Models are thinking...
+            </div>
+            <div className="flex items-center gap-3 overflow-x-auto">
+              {thinkingProcess.slice(-3).map((process) => {
+                const model = aiModels.find((a) => a.id === process.modelId);
+                return (
+                  <div
+                    key={process.id}
+                    className={`flex items-center gap-2 whitespace-nowrap px-3 py-1.5 rounded-lg border ${
+                      process.selected
+                        ? "bg-card/50 border-border"
+                        : "bg-red-500/10 border-red-500/20"
+                    } animate-fade-in`}
+                  >
+                    <div
+                      className={`w-6 h-6 rounded-full ${model?.avatarBg} flex items-center justify-center shadow-md`}
+                    >
+                      <model.icon className="w-3 h-3 text-white" />
+                    </div>
+                    <div className="text-sm text-foreground">
+                      {process.step}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {process.timestamp}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Chat Display */}
+        <div className="flex-1 p-4 overflow-y-auto">
+          {activeChat && getActiveChat() ? (
+            <div className="h-full">
+              {/* User Query */}
+              <div className="mb-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center backdrop-blur-sm">
+                    <User className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-foreground">
+                      {getActiveChat().query}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Battle Session • {getActiveChat().timestamp}
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
 
-            {/* Chat Display */}
-            <div className="flex-1 p-4 overflow-y-auto">
-              {activeChat && getActiveChat() ? (
-                <div className="h-full">
-                  {/* User Query */}
-                  <div className="mb-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center backdrop-blur-sm">
-                        <User className="w-4 h-4 text-primary" />
-                      </div>
+              {/* Winner Banner */}
+              {winner && (
+                <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/30 backdrop-blur-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Trophy className="w-6 h-6 text-yellow-500" />
                       <div>
-                        <div className="text-sm font-medium text-foreground">
-                          {getActiveChat().query}
+                        <div className="font-medium text-foreground">
+                          Battle Complete! Winner Declared
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          Battle Session • {getActiveChat().timestamp}
+                        <div className="text-sm text-muted-foreground">
+                          {aiModels.find((m) => m.id === winner)?.name} achieved
+                          the highest score
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
 
-                  {/* Winner Banner */}
-                  {winner && (
-                    <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/30 backdrop-blur-sm">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Trophy className="w-6 h-6 text-yellow-500" />
-                          <div>
-                            <div className="font-medium text-foreground">
-                              Battle Complete! Winner Declared
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {aiModels.find((m) => m.id === winner)?.name}{" "}
-                              achieved the highest score
-                            </div>
-                          </div>
-                        </div>
-                        {/* <button className="px-3 py-1.5 rounded-lg bg-card/50 border border-border text-sm hover:bg-card/70">
-                          View Detailed Comparison
-                        </button> */}
-                      </div>
-                    </div>
-                  )}
+              {/* AI Responses Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                {aiModels.map((model) => {
+                  const response = getActiveChat().responses?.[model.id];
+                  const status = aiStatus[model.id];
+                  const streamKey = `${activeChat}-${model.id}`;
+                  const displayText =
+                    streamingText[streamKey] || response?.content;
+                  const showThinking = showThinkingProcess[model.id];
 
-                  {/* AI Responses Grid */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {aiModels.map((model) => {
-                      const response = getActiveChat().responses?.[model.id];
-                      const status = aiStatus[model.id];
-                      const streamKey = `${activeChat}-${model.id}`;
-                      const displayText =
-                        streamingText[streamKey] || response?.content;
-                      const showThinking = showThinkingProcess[model.id];
-
-                      return (
-                        <div
-                          key={model.id}
-                          className={`rounded-2xl border overflow-hidden transition-all duration-300 backdrop-blur-sm ${
-                            winner === model.id
-                              ? "border-yellow-500/50 bg-card/70 shadow-xl shadow-yellow-500/10"
-                              : status === "thinking" || status === "generating"
-                              ? `border-${
-                                  model.id === "gemini"
-                                    ? "blue"
-                                    : model.id === "grok"
+                  return (
+                    <div
+                      key={model.id}
+                      className={`rounded-2xl border overflow-hidden transition-all duration-300 backdrop-blur-sm ${
+                        winner === model.id
+                          ? "border-yellow-500/50 bg-card/70 shadow-xl shadow-yellow-500/10"
+                          : status === "thinking" || status === "generating"
+                            ? `border-${
+                                model.id === "gemini"
+                                  ? "blue"
+                                  : model.id === "grok"
                                     ? "red"
                                     : "emerald"
-                                }-500/50 bg-card/70 shadow-lg shadow-${
-                                  model.id === "gemini"
-                                    ? "blue"
-                                    : model.id === "grok"
+                              }-500/50 bg-card/70 shadow-lg shadow-${
+                                model.id === "gemini"
+                                  ? "blue"
+                                  : model.id === "grok"
                                     ? "red"
                                     : "emerald"
-                                }-500/10`
-                              : "border-border bg-card/50"
-                          }`}
-                          style={{
-                            minHeight: "400px",
-                            maxHeight: "500px",
-                            display: "flex",
-                            flexDirection: "column",
-                          }}
-                        >
-                          {/* Header */}
-                          <div className="p-4 border-b border-border bg-gradient-to-r from-card to-card/80">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div
-                                  className={`w-10 h-10 rounded-lg ${model.avatarBg} flex items-center justify-center shadow-lg`}
-                                >
-                                  <model.icon className="w-5 h-5 text-white" />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <h3 className="font-medium text-foreground">
-                                      {model.name}
-                                    </h3>
-                                    {winner === model.id && (
-                                      <Trophy className="w-4 h-4 text-yellow-500" />
-                                    )}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground mt-1">
-                                    {model.provider} • Streaming:{" "}
-                                    {model.streamingSpeed}
-                                  </div>
-                                </div>
-                              </div>
-                              {response?.score &&
-                                renderScoreBadge(model.id, response.score)}
+                              }-500/10`
+                            : "border-border bg-card/50"
+                      }`}
+                      style={{
+                        minHeight: "400px",
+                        maxHeight: "500px",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {/* Header */}
+                      <div className="p-4 border-b border-border bg-gradient-to-r from-card to-card/80">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-10 h-10 rounded-lg ${model.avatarBg} flex items-center justify-center shadow-lg`}
+                            >
+                              <model.icon className="w-5 h-5 text-white" />
                             </div>
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1 p-4 overflow-y-auto">
-                            {status === "thinking" ? (
-                              <div className="h-full flex flex-col">
-                                <div className="flex items-center gap-3 mb-4 p-3 rounded-lg bg-primary/10 border border-primary/20">
-                                  <Lightbulb className="w-5 h-5 text-primary animate-pulse" />
-                                  <div className="flex-1">
-                                    <div className="text-sm text-primary font-medium mb-1">
-                                      {model.id === "deepseek"
-                                        ? "DeepSeek Thinking..."
-                                        : "Generating Response"}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      {currentThinkingStep[model.id] ||
-                                        "Initializing..."}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="space-y-2">
-                                  {thinkingProcess
-                                    .filter((p) => p.modelId === model.id)
-                                    .slice(-5)
-                                    .map((step) => (
-                                      <div
-                                        key={step.id}
-                                        className={`text-xs pl-4 border-l-2 py-1 animate-fade-in ${
-                                          step.selected
-                                            ? "text-muted-foreground border-primary/30"
-                                            : "text-red-400/70 border-red-400/30"
-                                        }`}
-                                      >
-                                        {step.step}
-                                        {!step.selected && (
-                                          <span className="ml-2 text-xs text-red-400/50">
-                                            (not selected)
-                                          </span>
-                                        )}
-                                      </div>
-                                    ))}
-                                </div>
-                              </div>
-                            ) : status === "generating" ? (
-                              <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-secondary mb-3">
-                                  <Sparkles className="w-4 h-4 animate-pulse" />
-                                  <span className="text-sm font-medium">
-                                    {model.id === "deepseek"
-                                      ? "DeepSeek Reasoning..."
-                                      : "Generating response..."}
-                                  </span>
-                                </div>
-                                <div className="prose prose-invert max-w-none text-foreground text-sm leading-relaxed whitespace-pre-wrap">
-                                  {displayText}
-                                  <span className="inline-block w-1 h-4 bg-secondary animate-pulse ml-0.5" />
-                                </div>
-                              </div>
-                            ) : response?.status === "completed" ? (
-                              <>
-                                {/* Show Thinking Process Toggle */}
-                                {response.thinkingSteps && (
-                                  <div className="mb-4">
-                                    <button
-                                      onClick={() =>
-                                        toggleThinkingProcess(model.id)
-                                      }
-                                      className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                      <Cpu className="w-3 h-3" />
-                                      {showThinking ? "Hide" : "Show"} thinking
-                                      process
-                                      <ChevronDown
-                                        className={`w-3 h-3 transition-transform ${
-                                          showThinking ? "rotate-180" : ""
-                                        }`}
-                                      />
-                                    </button>
-
-                                    {showThinking && (
-                                      <div className="mt-3 p-3 rounded-lg bg-background/50 border border-border">
-                                        <div className="text-xs font-medium text-foreground mb-2">
-                                          Internal Reasoning Process
-                                        </div>
-                                        <div className="space-y-2 max-h-48 overflow-y-auto">
-                                          {response.thinkingSteps.map(
-                                            (step, index) => (
-                                              <div
-                                                key={index}
-                                                className={`text-xs p-2 rounded border ${
-                                                  step.selected
-                                                    ? "bg-emerald-500/5 border-emerald-500/20"
-                                                    : "bg-red-500/5 border-red-500/20"
-                                                }`}
-                                              >
-                                                <div className="flex items-center gap-2">
-                                                  {step.selected ? (
-                                                    <CheckCircle className="w-3 h-3 text-emerald-500" />
-                                                  ) : (
-                                                    <X className="w-3 h-3 text-red-500" />
-                                                  )}
-                                                  <span
-                                                    className={
-                                                      step.selected
-                                                        ? "text-foreground"
-                                                        : "text-red-400/70"
-                                                    }
-                                                  >
-                                                    {step.step}
-                                                  </span>
-                                                </div>
-                                                {step.reason && (
-                                                  <div className="text-xs text-muted-foreground mt-1 ml-5">
-                                                    {step.reason}
-                                                  </div>
-                                                )}
-                                              </div>
-                                            )
-                                          )}
-                                        </div>
-                                      </div>
-                                    )}
-                                  </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-medium text-foreground">
+                                  {model.name}
+                                </h3>
+                                {winner === model.id && (
+                                  <Trophy className="w-4 h-4 text-yellow-500" />
                                 )}
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {model.provider} • Streaming:{" "}
+                                {model.streamingSpeed}
+                              </div>
+                            </div>
+                          </div>
+                          {response?.score &&
+                            renderScoreBadge(model.id, response.score)}
+                        </div>
+                      </div>
 
-                                <div className="prose prose-invert max-w-none text-foreground text-sm leading-relaxed whitespace-pre-wrap">
-                                  {displayText}
+                      {/* Content */}
+                      <div className="flex-1 p-4 overflow-y-auto">
+                        {status === "thinking" ? (
+                          <div className="h-full flex flex-col">
+                            <div className="flex items-center gap-3 mb-4 p-3 rounded-lg bg-primary/10 border border-primary/20">
+                              <Lightbulb className="w-5 h-5 text-primary animate-pulse" />
+                              <div className="flex-1">
+                                <div className="text-sm text-primary font-medium mb-1">
+                                  {model.id === "deepseek"
+                                    ? "DeepSeek Thinking..."
+                                    : "Generating Response"}
                                 </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {currentThinkingStep[model.id] ||
+                                    "Initializing..."}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              {thinkingProcess
+                                .filter((p) => p.modelId === model.id)
+                                .slice(-5)
+                                .map((step) => (
+                                  <div
+                                    key={step.id}
+                                    className={`text-xs pl-4 border-l-2 py-1 animate-fade-in ${
+                                      step.selected
+                                        ? "text-muted-foreground border-primary/30"
+                                        : "text-red-400/70 border-red-400/30"
+                                    }`}
+                                  >
+                                    {step.step}
+                                    {!step.selected && (
+                                      <span className="ml-2 text-xs text-red-400/50">
+                                        (not selected)
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                        ) : status === "generating" ? (
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-2 text-secondary mb-3">
+                              <Sparkles className="w-4 h-4 animate-pulse" />
+                              <span className="text-sm font-medium">
+                                {model.id === "deepseek"
+                                  ? "DeepSeek Reasoning..."
+                                  : "Generating response..."}
+                              </span>
+                            </div>
+                            <div className="prose prose-invert max-w-none text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+                              {displayText}
+                              <span className="inline-block w-1 h-4 bg-secondary animate-pulse ml-0.5" />
+                            </div>
+                          </div>
+                        ) : response?.status === "completed" ? (
+                          <>
+                            {/* Show Thinking Process Toggle */}
+                            {response.thinkingSteps && (
+                              <div className="mb-4">
+                                <button
+                                  onClick={() =>
+                                    toggleThinkingProcess(model.id)
+                                  }
+                                  className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                  <Cpu className="w-3 h-3" />
+                                  {showThinking ? "Hide" : "Show"} thinking
+                                  process
+                                  <ChevronDown
+                                    className={`w-3 h-3 transition-transform ${
+                                      showThinking ? "rotate-180" : ""
+                                    }`}
+                                  />
+                                </button>
 
-                                {/* Metrics */}
-                                {response.metrics && (
-                                  <div className="mt-4 pt-4 border-t border-border">
-                                    <div className="text-xs text-muted-foreground mb-2">
-                                      Performance Metrics:
+                                {showThinking && (
+                                  <div className="mt-3 p-3 rounded-lg bg-background/50 border border-border">
+                                    <div className="text-xs font-medium text-foreground mb-2">
+                                      Internal Reasoning Process
                                     </div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                      {Object.entries(response.metrics).map(
-                                        ([key, value]) => (
+                                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                                      {response.thinkingSteps.map(
+                                        (step, index) => (
                                           <div
-                                            key={key}
-                                            className="flex items-center justify-between text-xs"
+                                            key={index}
+                                            className={`text-xs p-2 rounded border ${
+                                              step.selected
+                                                ? "bg-emerald-500/5 border-emerald-500/20"
+                                                : "bg-red-500/5 border-red-500/20"
+                                            }`}
                                           >
-                                            <span className="capitalize text-muted-foreground">
-                                              {key}:
-                                            </span>
-                                            <div className="flex items-center gap-1">
-                                              <span className="font-medium">
-                                                {value}%
+                                            <div className="flex items-center gap-2">
+                                              {step.selected ? (
+                                                <CheckCircle className="w-3 h-3 text-emerald-500" />
+                                              ) : (
+                                                <X className="w-3 h-3 text-red-500" />
+                                              )}
+                                              <span
+                                                className={
+                                                  step.selected
+                                                    ? "text-foreground"
+                                                    : "text-red-400/70"
+                                                }
+                                              >
+                                                {step.step}
                                               </span>
-                                              <div className="w-16 h-1.5 bg-background rounded-full overflow-hidden">
-                                                <div
-                                                  className="h-full bg-gradient-to-r from-primary to-secondary"
-                                                  style={{ width: `${value}%` }}
-                                                />
-                                              </div>
                                             </div>
+                                            {step.reason && (
+                                              <div className="text-xs text-muted-foreground mt-1 ml-5">
+                                                {step.reason}
+                                              </div>
+                                            )}
                                           </div>
-                                        )
+                                        ),
                                       )}
                                     </div>
                                   </div>
                                 )}
-                              </>
-                            ) : (
-                              <div className="h-full flex items-center justify-center text-center p-6">
-                                <div>
-                                  <div className="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center mx-auto mb-3 shadow-lg">
-                                    <model.icon className="w-6 h-6 text-muted-foreground" />
-                                  </div>
-                                  <div className="text-sm text-muted-foreground">
-                                    Ready to compete
-                                  </div>
+                              </div>
+                            )}
+
+                            <div className="prose prose-invert max-w-none text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+                              {displayText}
+                            </div>
+
+                            {/* Metrics */}
+                            {response.metrics && (
+                              <div className="mt-4 pt-4 border-t border-border">
+                                <div className="text-xs text-muted-foreground mb-2">
+                                  Performance Metrics:
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                  {Object.entries(response.metrics).map(
+                                    ([key, value]) => (
+                                      <div
+                                        key={key}
+                                        className="flex items-center justify-between text-xs"
+                                      >
+                                        <span className="capitalize text-muted-foreground">
+                                          {key}:
+                                        </span>
+                                        <div className="flex items-center gap-1">
+                                          <span className="font-medium">
+                                            {value}%
+                                          </span>
+                                          <div className="w-16 h-1.5 bg-background rounded-full overflow-hidden">
+                                            <div
+                                              className="h-full bg-gradient-to-r from-primary to-secondary"
+                                              style={{ width: `${value}%` }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ),
+                                  )}
                                 </div>
                               </div>
                             )}
+                          </>
+                        ) : (
+                          <div className="h-full flex items-center justify-center text-center p-6">
+                            <div>
+                              <div className="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                <model.icon className="w-6 h-6 text-muted-foreground" />
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                Ready to compete
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : (
-                <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                  <div className="mb-6">
-                    {/* <Trophy className="w-12 h-12 text-primary" /> */}
-                    <div className="w-[100px] h-[100px] rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
-              <span className="font-display text-4xl font-bold text-primary">AI</span>
-            </div>
-                  </div>
-                  <h3 className="text-2xl font-display font-medium text-foreground mb-3 text-white animate-text-glow">
-                    AI Collective Arena
-                  </h3>
-                  <p className="text-muted-foreground max-w-md mb-8 text-lg">
-                    Witness the ultimate AI showdown. Top models compete to
-                    provide the best answers, with automatic scoring and
-                    comparison.
-                  </p>
-                  <div className="flex items-center gap-3 mb-6">
-                    {aiModels.map((model, index) => (
-                      <div key={model.id} className="flex items-center">
-                        <div
-                          className={`w-8 h-8 rounded-full ${model.avatarBg} flex items-center justify-center shadow-lg`}
-                        >
-                          <model.icon className="w-4 h-4 text-white" />
-                        </div>
-                        {index < aiModels.length - 1 && (
-                          <ArrowRight className="w-4 h-4 text-primary mx-2 animate-text-glow-pulse" />
                         )}
                       </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center text-center p-8">
+              <div className="mb-6">
+                <div className="w-[100px] h-[100px] rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
+                  <span className="font-display text-4xl font-bold text-primary">
+                    AI
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-display font-medium text-foreground mb-3 text-white animate-text-glow">
+                AI Collective Arena
+              </h3>
+              <p className="text-muted-foreground max-w-md mb-8 text-lg">
+                Witness the ultimate AI showdown. Top models compete to provide
+                the best answers, with automatic scoring and comparison.
+              </p>
+              <div className="flex items-center gap-3 mb-6">
+                {aiModels.map((model, index) => (
+                  <div key={model.id} className="flex items-center">
+                    <div
+                      className={`w-8 h-8 rounded-full ${model.avatarBg} flex items-center justify-center shadow-lg`}
+                    >
+                      <model.icon className="w-4 h-4 text-white" />
+                    </div>
+                    {index < aiModels.length - 1 && (
+                      <ArrowRight className="w-4 h-4 text-primary mx-2 animate-text-glow-pulse" />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Sample Queries */}
+              {sampleQueriesVisible && (
+                <div className="mt-6 w-full max-w-2xl">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Try one of these sample queries:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {sampleQueries.map((query, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSampleQuery(query)}
+                        className="p-3 rounded-xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/30 transition-all duration-200 text-left group"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <span className="text-sm text-foreground">
+                            {query}
+                          </span>
+                        </div>
+                      </button>
                     ))}
                   </div>
                 </div>
               )}
-              <div ref={messagesEndRef} />
             </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Area */}
+        <div className="border-t border-border p-4">
+          <div className="relative max-w-4xl mx-auto">
             <input
+              ref={inputRef}
               type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               className="w-full bg-background border border-border/50 hover:border-primary/50 focus:border-primary/70 rounded-xl py-3 pl-10 pr-32 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-foreground placeholder:text-muted-foreground/50"
               placeholder="Ask anything..."
               disabled={isProcessing}
             />
-            <button 
-              type="submit"
+            <button
+              onClick={handleSend}
               className={`absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-1.5 px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                isProcessing 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground shadow-glow hover:shadow-glow-lg'
+                isProcessing
+                  ? "bg-primary/10 text-primary"
+                  : "bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground shadow-glow hover:shadow-glow-lg"
               }`}
               disabled={isProcessing}
             >
@@ -1113,7 +1142,7 @@ const ChatPage = () => {
                   <span>Processing</span>
                   <div className="flex space-x-1">
                     {[1, 2, 3].map((i) => (
-                      <div 
+                      <div
                         key={i}
                         className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce"
                         style={{ animationDelay: `${i * 0.15}s` }}
@@ -1128,7 +1157,7 @@ const ChatPage = () => {
                 </>
               )}
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>
